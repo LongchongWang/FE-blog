@@ -1,6 +1,17 @@
 # FE-blog
 
-This blog contains 
+When I started my Front-End developer career (from animal nutritionist), I was 27 years old. I knew nearly nothing about programming, let alone confusing terminology, design pattern and algorithm. Now I have enough knowledge to find a FE-developer job. But it's still far far away to go. My plan is simple: **conquer terminology one by one, conquer design pattern one by one, conquer algorithm one by one, no rash and no worry**. Let's do this together.
+- [FE-blog](#fe-blog)
+  - [ECMAScript Standard Features](#ecmascript-standard-features)
+    - [Number](#number)
+    - [String](#string)
+    - [Array](#array)
+    - [Function](#function)
+    - [Plain Object](#plain-object)
+  - [Computer Programming Terminology](#computer-programming-terminology)
+    - [Evaluation Strategy](#evaluation-strategy)
+    - [Thunk](#thunk)
+
 
 ## ECMAScript Standard Features
 ### Number

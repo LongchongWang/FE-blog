@@ -14,7 +14,7 @@ This blog contains
 > ### [Wikipedia](https://en.wikipedia.org/wiki/Evaluation_strategy)
 > Evaluation strategies are used by programming languages to determine when to evaluate the argument(s) of a function call (for function, also read: operation, method, or relation) and what kind of value to pass to the function. 
 
-If it is hard to understand, see how ECMAscript evaluates the argument(s) of functions:
+If it is hard to understand by the definition above, see how ECMAscript evaluates the argument(s) of functions as example:
 ```javascript
 function fun(arr) {
   arr.push(1);
@@ -24,9 +24,9 @@ let tar = [];
 fun(tar);
 console.log(tar); // [1]
 ```
-The strategy used by ECMAscript is [call-by-sharing](https://en.wikipedia.org/wiki/Evaluation_strategy#Call_by_sharing)(also referred to as call-by-object or call-by-object-sharing), which evaluates the reference of an object and passes its copy to functions. What if the arguments are primitive values? ECMAscript also evaluates their values and passes over copies of those values. Except ECMAscript, call-by-sharing is also used by Python, Java, Ruby, Scheme, AppleScript and many others.
+The strategy used by ECMAscript is [call-by-sharing](https://en.wikipedia.org/wiki/Evaluation_strategy#Call_by_sharing)(also referred to as call-by-object or call-by-object-sharing), which evaluates the reference of an object and passes its copy to functions. Therefore, function could have access to origin object by that reference copy, but this accessibility will lost after reassign the argument's reference. What if the arguments are primitive values? ECMAscript also evaluates their values and passes over copies of those values. Except ECMAscript, call-by-sharing is also used by Python, Java, Ruby, Scheme, AppleScript and many others.
 
-But people in community used to say ECMAscript and Java uses [call-by-value](https://en.wikipedia.org/wiki/Evaluation_strategy#Call_by_value) strategy. Well, strict call-by-value strategy means deep copies of arguments will be evaluated and passed when they are non-primitive, and this is what happens in C and C++ when pass structures to a function. Therefore, there will be big performance issues when non-primitive values are the main data carriers for function arguments. Obviously, this strategy is more safe because we don't need to worry about modifying an origin object unconsciously by pass it to functions.
+But people in community used to say ECMAscript and Java uses [call-by-value](https://en.wikipedia.org/wiki/Evaluation_strategy#Call_by_value) strategy. Well, strict call-by-value strategy means that deep copies of arguments will be evaluated and passed when they are non-primitive, and this is what happens in C and C++ when pass structures to a function. Therefore, there will be serious performance issues when non-primitive values are the main data carriers for function arguments. Obviously, this strategy is more safe because we don't need to worry about modifying an origin object unconsciously by pass it to functions.
 
 Another similar strategy is [call-by-reference](https://en.wikipedia.org/wiki/Evaluation_strategy#Call_by_reference), which pass the variable's reference (not copy of value) to function. This typically means that the function can modify (i.e. assign to) the variable used as argument — something that will be seen by (or impacted on) its caller. Call-by-reference can therefore be used to provide an additional channel of communication between the called function and the calling function.
 
@@ -42,13 +42,13 @@ Thunk have a variety of applications in compiler code generation, modular progra
 // we need to calculate the power one on the other asynchronously
 const importantNumA = 2, importantNumB = 3;
 // thunk creator
-function asyncMathPow(a, b) {
+function asyncMathPow() {
   return async function() {
-    return Math.pow(a, b);
+    return Math.pow(importantNumA, importantNumB);
   }
 }
 // thunk has been created
-const thunk = asyncMathPow(importantNumA, importantNumB);
+const thunk = asyncMathPow();
 // now thunk is ready to passed by
 async function consoleMathPow(thk) {
   thk().then(value => console.log(value));

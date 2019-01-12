@@ -9,3 +9,6 @@ This md file records blogs helpfule for me, at least on the time I read them. I 
 
 ## Webpack Related
 - [Webpack — The Confusing Parts (**informative**)](https://medium.com/@rajaraodv/webpack-the-confusing-parts-58712f8fcad9)
+
+## WebAssembly Related
+- [A crash course in just-in-time (JIT) compilers](https://hacks.mozilla.org/2017/02/a-crash-course-in-just-in-time-jit-compilers/)

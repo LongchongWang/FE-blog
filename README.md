@@ -11,6 +11,8 @@ When I started my Front-End developer career (from animal nutritionist), I was 2
   - [Computer Programming Terminology](#computer-programming-terminology)
     - [Evaluation Strategy](#evaluation-strategy)
     - [Thunk](#thunk)
+  - [Tools to Make Life Easier](#tools-to-make-life-easier)
+    - [JSON Schema](#json-schema)
 
 
 ## ECMAScript Standard Features
@@ -68,3 +70,92 @@ consoleMathPow(thunk);
 ```
 
 We create a thunk to restore a calculation or a request for data or anything else, and we are able to pass and apply this thunk whenever and wherever we need.
+
+## Tools to Make Life Easier
+### JSON Schema
+**JSON Schema** is written in JSON to describe and validate the structure or format of other JSON data. 
+- Learn **JSON Schema** [here](http://json-schema.org/understanding-json-schema/index.html)
+- Test **JSON Schema** [here](https://jsonschema.net/)
+
+Below is a JSON Schema example which include mostly used rules.
+```json
+{
+  "$schema": "https://json-schema.org/draft-07/json-schema-release-notes.html",
+  "$id": "https://www.myproject.com/schemas/activity.json",
+  "definitions": {
+    "address": {
+      "$id": "#address",
+      "type": "object",
+      "properties": {
+        "street_address": { "type": "string" },
+        "city":           { "type": "string" },
+        "state":          { "type": "string" }
+      },
+      "required": ["street_address", "city", "state"]
+    },
+    "person": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/person" },
+          "default": []
+        },
+        "billing_address": { "$ref": "#address" },
+        "shipping_address": {
+          "allOf": [
+            { "$ref": "#/definitions/address" },
+            { 
+              "properties": { 
+                "type": { "enum": [ "residential", "business" ] } 
+              },
+              "required": ["type"]
+            }
+          ]
+        }
+      }
+    }
+  },
+
+  "type": "object",
+
+  "properties": {
+    "activity": {
+      "type": "object",
+      "properties": {
+        "activityId": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "exclusiveMinimum": true,
+          "exclusiveMaximum": false,
+          "multipleOf": 1
+        },
+        "activityTitle": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 30,
+          "pattern": "^activity{0-9}*_test&"
+        },
+        "activityImg": {
+          "type": "string",
+          "format": "email"
+        },
+        "hasStart": {
+          "type": "boolean"
+        }
+      },
+      "propertyNames": {
+        "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+      },
+      "additionalProperties": { "type": "string" },
+      "required": ["activityId", "activityTitle"]
+    },
+    "invitee": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/person" }
+    }
+  }
+}
+```

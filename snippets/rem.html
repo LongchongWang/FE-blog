@@ -1,0 +1,21 @@
+<script>
+  (function () {
+    var docEl = document.documentElement,
+      resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+      scale = 1 / window.devicePixelRatio,
+      recalc = function () {
+        var uiWidth = 1080;
+        var clientWidth = docEl.clientWidth;
+
+        docEl.style.fontSize = 100 * (clientWidth / uiWidth) + 'px';
+        // 解决部分rem特别大的问题
+        var docElFontSize = docEl.style.fontSize.replace(/px/gi, '');
+        var computedFontSize = window.getComputedStyle(docEl)['font-size'].replace(/px/gi, '');
+        docElFontSize != computedFontSize && (docEl.style.fontSize = docElFontSize * docElFontSize / computedFontSize + 'px');
+      };
+    if (ua.wechat) document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=device-width, initial-scale=' + scale + ', maximum-scale=' + scale + ', minimum-scale=' + scale + ', user-scalable = no, shrink-to-fit=no');
+    if (!document.addEventListener) return;
+    window.addEventListener(resizeEvt, recalc, false);
+    document.addEventListener('DOMContentLoaded', recalc, false);
+  })();
+</script>

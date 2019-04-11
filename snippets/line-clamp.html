@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>line-clamp</title>
+  <style>
+    .container, .code {
+      width: 340px;
+      margin: 20px auto;
+      border: 1px solid #ddd;
+      padding: 20px;
+      text-align: center;
+      box-sizing: border-box;
+    }
+    .code {
+      padding: 0;
+      background: rgb(57, 35, 35);
+      border-radius: 10px;
+      border: none;
+      color: #fff;
+      overflow-x: auto;
+      text-align: left;
+    }
+
+    p {
+      text-align: justify;
+      overflow: hidden;
+    }
+
+    .lineClamp {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+
+    #toggleClassBtn {
+      width: 150px;
+      height: 30px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="code">
+  <pre>
+    .lineClamp {
+      display: -webkit-box;
+      -webkit-box-orient: vertical; 
+      -webkit-line-clamp: 2;
+    }
+  </pre>
+  </div>
+  <div class="container">
+    <p class="longText">
+      CSS的line-clamp属性并没有任何规范，它的使用必须基于已过时的 flexbox 模型（display: -webkit-box），并且必须同时声明-webkit-box-orient: vertical;
+    </p>
+    <button id="toggleClassBtn">Use Line-Clamp</button>
+  </div>
+  <script>
+    var btn = document.getElementById('toggleClassBtn');
+    var p = document.querySelector('.longText');
+    btn.onclick = function () {
+      p.classList.toggle('lineClamp');
+      btn.textContent = p.classList.contains('lineClamp') ? 'Undo' : 'Use Line-Clamp';
+    }
+  </script>
+</body>
+
+</html>

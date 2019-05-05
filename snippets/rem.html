@@ -1,21 +1,55 @@
 <script>
   (function () {
-    var docEl = document.documentElement,
-      resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+    var docEl = document.documentElement || document.body,
+      originalHeight = docEl.clientHeight,
+      originalWidth = docEl.clientWidth,
+      originalOrientation = originalHeight > originalWidth ? 'portrait' : 'landscape',
+      // 如果有canvas绘图，scale缩放的作用是提高绘图分辨率
       scale = 1 / window.devicePixelRatio,
       recalc = function () {
-        var uiWidth = 1080;
-        var clientWidth = docEl.clientWidth;
+        var uiWidth = 1080,
+          uiHeight = 1920,
+          uiRatio = uiHeight / uiWidth,
+          clientWidth = docEl.clientWidth,
+          clientHeight = docEl.clientHeight,
+          clientRatio = clientHeight / clientWidth,
+          heightDiff = originalHeight - clientHeight,
+          widthDiff = originalWidth - clientWidth;
 
-        docEl.style.fontSize = 100 * (clientWidth / uiWidth) + 'px';
-        // 解决部分rem特别大的问题
-        var docElFontSize = docEl.style.fontSize.replace(/px/gi, '');
-        var computedFontSize = window.getComputedStyle(docEl)['font-size'].replace(/px/gi, '');
-        docElFontSize != computedFontSize && (docEl.style.fontSize = docElFontSize * docElFontSize / computedFontSize + 'px');
+        // 有些键盘会
+        if (heightDiff >= 100 && widthDiff === 0) { // 呼起键盘
+          document.dispatchEvent(new Event('pullUpKeyBoard'));
+          return;
+        } else if (heightDiff < -100 && widthDiff === 0) { // 收起键盘
+          document.dispatchEvent(new Event('pullDownKeyBoard'));
+          return;
+        } else if (widthDiff + heightDiff === 0) {
+          document.dispatchEvent(new Event(clientWidth > clientHeight ? 'toLandscape' : 'toPortrait'));
+        }
+
+        if (clientRatio > uiRatio) {
+          // 上下留白
+          docEl.style.fontSize = 100 * (clientWidth / uiWidth) + 'px';
+        } else {
+          // 左右留白
+          docEl.style.fontSize = 100 * (clientHeight / uiHeight) + 'px';
+        }
       };
-    if (ua.wechat) document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=device-width, initial-scale=' + scale + ', maximum-scale=' + scale + ', minimum-scale=' + scale + ', user-scalable = no, shrink-to-fit=no');
+    document
+      .querySelector('meta[name="viewport"]')
+      .setAttribute(
+        'content',
+        'width=device-width, initial-scale=' +
+        scale +
+        ', maximum-scale=' +
+        scale +
+        ', minimum-scale=' +
+        scale +
+        ', user-scalable = no, shrink-to-fit=no'
+      );
+
     if (!document.addEventListener) return;
-    window.addEventListener(resizeEvt, recalc, false);
+    window.addEventListener('resize', recalc, false);
     document.addEventListener('DOMContentLoaded', recalc, false);
   })();
 </script>

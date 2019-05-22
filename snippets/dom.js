@@ -1,3 +1,10 @@
+export const nextFrame = function (fn) {
+  if (requestAnimationFrame) {
+    requestAnimationFrame(fn)
+  } else {
+    setTimeout(fn, 34)
+  }
+}
 export const documentVerticalScrollPosition = function () {
   if (window.pageYOffset) return window.pageYOffset // Firefox, Chrome, Opera, Safari.
   if (document.documentElement && document.documentElement.scrollTop) return document.documentElement.scrollTop // Internet Explorer 6 (standards mode).
@@ -31,7 +38,6 @@ export const elementVerticalClientPosition = function (element) {
  */
 export const scrollVerticalTickToPosition = function (currentPosition, targetPosition) {
   const filter = 0.2
-  const fps = 60
   return new Promise(resolve => {
     function scroll(_currentPosition, _targetPosition) {
       const difference = parseFloat(_targetPosition) - parseFloat(_currentPosition)
@@ -52,11 +58,7 @@ export const scrollVerticalTickToPosition = function (currentPosition, targetPos
       window.scrollTo(0.0, Math.round(_currentPosition))
 
       // Schedule next tick.
-      if (requestAnimationFrame) {
-        requestAnimationFrame(() => scroll(_currentPosition, _targetPosition))
-      } else {
-        setTimeout(() => scroll(_currentPosition, _targetPosition), (1000 / fps))
-      }
+      nextFrame(() => scroll(_currentPosition, _targetPosition))
     }
     scroll(currentPosition, targetPosition)
   })
@@ -96,4 +98,49 @@ export const scrollVerticalToTop = function (smooth) {
 
   // Start animation.
   return scrollVerticalTickToPosition(currentPosition, targetPosition)
+}
+
+/**
+ * For public use
+ * @param ancestorElement scrollable ancestor element
+ * @param padding Top padding to apply  element.
+ */
+export const scrollHorizontalToElement = function (element, ancestorElement, position = 'center') {
+  if (!element || !ancestorElement) return
+  if (!element.getBoundingClientRect || !ancestorElement) return
+  const clientWidth = viewportWidth()
+
+  function scroll(left, targetElementLeft) {
+    // 1. 判断是否达到了目标位置
+    const difference = left - targetElementLeft
+    if (Math.abs(difference) < 1) return
+    // 2. 如果没有，计算父元素目标移动距离
+    const currentScrollLeft = ancestorElement.scrollLeft
+    const nextScrollLeft = currentScrollLeft + Math.round(difference * 0.2)
+    // 3. 滚动
+    ancestorElement.scrollLeft = nextScrollLeft
+    // 4. 验证是否有效滚动，如果是继续下一次滚动，如果不是终止
+    if (ancestorElement.scrollLeft === currentScrollLeft) {
+      ancestorElement.scrollLeft = currentScrollLeft + difference
+    } else {
+      const newLeft = element.getBoundingClientRect().left
+      nextFrame(() => scroll(newLeft, targetElementLeft))
+    }
+  }
+
+  function start() {
+    const {
+      left,
+      width
+    } = element.getBoundingClientRect()
+    const targetElementLeft = position === 'center' ? Math.round((clientWidth - width) / 2) : 0
+
+    if (width === 0) {
+      nextFrame(start)
+    } else {
+      scroll(left, targetElementLeft)
+    }
+  }
+
+  start()
 }

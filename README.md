@@ -29,10 +29,14 @@ When I started my Front-End developer career (from animal nutritionist), I was 2
 The term **floating point** is derived from the fact that there is no fixed number of digits before and after the decimal point; that is, the decimal point can float.
 #### How numbers are encoded in JavaScript
 JavaScript numbers are all floating point, stored according to the [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) standard. That standard has several formats. JavaScript uses binary64 or double precision(*双精度*). As the former name indicates, numbers are stored in a binary format, in 64 bits. These bits are allotted as follows: The fraction(*尾数*) occupies bits 0 to 51, the exponent(*指数*) occupies bits 52 to 62, the sign occupies bit 63.
+
+
 |  sign    |exponent       |fraction|
 |:--------:|:-------------:|:------:|
 | 1bit     |  11bit        | 52 bit |
 | 63       |  62 - 52      | 0 - 51 |
+
+
 The components work as follows: If the sign bit is 0, the number is positive, otherwise negative. Roughly, the fraction contains the digits of a number, while the exponent indicates where the point is.
 ```
 // binary notation

@@ -169,6 +169,10 @@ consoleMathPow(thunk);
 
 We create a thunk to restore a calculation or a request for data or anything else, and we are able to pass and apply this thunk whenever and wherever we need.
 
+### Compose
+> See [here](https://github.com/pshrmn/notes/blob/master/functional-programming/compose.md)
+> Then read [here](https://github.com/pshrmn/notes/blob/master/redux/redux-middleware.md) to understand its usage.
+
 ## Tools to Make Life Easier
 ### JSON Schema
 **JSON Schema** is written in JSON to describe and validate the structure or format of other JSON data. 
